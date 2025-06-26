@@ -1,5 +1,5 @@
-# T-m-python-projelerim
-burda tüm python projelerim var
+# Bazi python-projelerim
+burda bazı python projelerim var
 
 ben Ahmet efe 
 
