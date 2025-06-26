@@ -1,0 +1,1179 @@
+from PyQt5.QtCore import*
+from PyQt5.QtWidgets import*
+from PyQt5.QtGui import*
+import sys as _s
+import matplotlib.pyplot as plt
+from matplotlib.figure import *
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas401
+import matplotlib.image as mpimg
+from pylab import* 
+import math as _mh
+import numpy as np
+import pandas as pd
+import cv2 as _cv
+from datetime import datetime as _dt_interwal
+
+class mainF(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("✻TVAP✻ (Teknik veri analiz programı)")
+        self.pfix_lb=QLabel()
+        self.pfix_lb.setAlignment(Qt.AlignCenter)
+        pix_lb=QLabel("↓↓GÖRÜNTÜ KONSOLU↓↓")
+        self.figure=Figure(figsize=(5,4),dpi=100)
+        self.canvas=FigureCanvas401(self.figure)
+        self.ax=self.figure.add_subplot(111)
+        readf0851=_cv.imread(r"cursor.png")
+        self.ax.set_title("Ham Görüntü")
+        self.tab_b=QTabWidget(self)
+        main_w=QSplitter(Qt.Horizontal)
+        main_w2=QSplitter(Qt.Horizontal)
+        main_la41=QHBoxLayout()
+        main_la431=QVBoxLayout()
+        self.mathsplt=QSplitter(Qt.Vertical)
+        self.lsplt=QSplitter(Qt.Vertical)
+        self.msplt=QSplitter(Qt.Vertical)
+        msplt_api_splt=QSplitter(Qt.Vertical)
+        ssplt=QSplitter(Qt.Vertical)
+        self.esplt=QSplitter(Qt.Vertical)
+        esplt_console_img=QSplitter(Qt.Vertical)
+        self.mlfwi0=QLineEdit()
+        self.mlfwi1=QLineEdit()
+        self.mcbw1=QComboBox()
+        self.mcbw2=QComboBox()
+        self.mcbw3=QComboBox()
+        self.ch_bx=QCheckBox()
+        self.ch_bx2=QCheckBox()
+        self.main_img=QImage()
+        mdt=QTimer(self)
+        mdt.start(100)
+        mdt.timeout.connect(self.endstatus0)
+        ext_lbl=QLabel("↓Daha fazla seçenek↓")
+        self.ext_lbl87=QLabel("NESNE ALGILAMA TÜRÜ: #seçilmedi#")
+        self.ext_lbl87.setAlignment(Qt.AlignCenter)
+        pix_lb.setAlignment(Qt.AlignCenter)
+        self.figure2=Figure(figsize=(5,4),dpi=100)
+        self.canvas2=FigureCanvas401(self.figure2)
+        self.ax2=self.figure2.add_subplot(111)
+        
+        self.ax2.set_title("İşlenmiş Görüntü")
+        self.mcbw1.addItem("Grileştirme (Grayscale Conversion)")
+        self.mcbw1.addItem("Eşikleme (Thresholding)")
+        self.mcbw1.addItem("Filtreleme (Filtering)")
+        self.mcbw1.addItem("Kenar Algılama (Edge Detection)")
+        self.mcbw1.addItem("Histogram Eşitleme (Histogram Equalization)")
+        self.mcbw1.addItem("Özellik Çıkarımı (Feature Extraction)")
+        self.mcbw1.addItem("Nesne Algılama (Object Detection)")
+        self.mcbw1.addItem("Kontür Algılama (Contour Detection)")
+        self.mcbw2.addItem("Gelişmiş görüntüleyici")
+        self.mcbw2.addItem("Klasik görüntüleyici")
+        self.mcbw3.addItem("3D Görüntüleme")
+        self.mcbw3.addItem("2D Görüntüleme")
+        self.ch_bx.setText("Eksenleri aç")
+        self.ch_bx2.setText("Izgaraları aç")
+        self.mclbr=QPushButton("<<Görsel tanımla>>")
+        self.mclbr0rm=QPushButton("<<Dizini tanımla>>")
+        self.mpst=QPushButton("<<Görsel yolunu kopyala>>")
+        self.msbw1=QSpinBox()
+        self.msbw1.setValue(0)
+        self.msbw1.setRange(0,255)
+        self.msbw2=QSpinBox()
+        self.msbw2.setValue(0)
+        self.msbw2.setRange(0,255)
+        self.msbw3=QSpinBox()
+        self.msbw3.setValue(0)
+        self.msbw3.setRange(0,255)
+        msbw3l=QLabel("↓↓görüntü işleme yoğunluğu-3↓↓")
+        mainbtn=QPushButton("<<Analiz et>>")
+        self.mdsa=QDial()
+        self.mdsa.resize(120,120)
+        self.mdsa.setValue(0)
+        self.mdsa.setRange(0,2)
+        scnd_lbl=QLabel("<<Görüntü işleme ayarları>>")
+        scnd_cb_lbl=QLabel("↓↓görüntü işleme seçenekleri↓↓")
+        scnd_cb_lbl2=QLabel("↓↓görüntü işleme yoğunluğu-1↓↓")
+        scnd_cb_lbl3=QLabel("↓↓görüntüleyici seçenekleri↓↓")
+        scnd_cb_lbl4=QLabel("↓↓görüntü işleme yoğunluğu-2↓↓")
+        self.logs=QTextEdit()
+        self.logs.setLineWrapMode(QTextEdit.NoWrap)
+        self.logs.setReadOnly(True)
+        self.logs.setPlaceholderText('Gerçekleştirdiğiniz görüntü işleme işlemleri detaylı şekilde buradaki geçmişe yansır...')
+        self.logs.setAlignment(Qt.AlignCenter)
+        scnd_cb_lbl.setAlignment(Qt.AlignCenter)
+        scnd_cb_lbl2.setAlignment(Qt.AlignCenter)
+        scnd_cb_lbl3.setAlignment(Qt.AlignCenter)
+        scnd_cb_lbl4.setAlignment(Qt.AlignCenter)
+        self.mtrw=QTreeView()
+        self.mrootsys=QFileSystemModel()
+        self.mtrw.setModel(self.mrootsys)
+        self.mrootsys.setNameFilterDisables(False)
+        self.mrootsys.setRootPath(self.mrootsys.myComputer())
+        self.mtrw.setAnimated(True)
+        self.mtrw.setDragEnabled(True)
+        self.mtrw.setSortingEnabled(True)
+        self.mlfwi1.setAlignment(Qt.AlignCenter)
+        self.mlfwi1.setPlaceholderText("<<Hedef dosya dizini>>")
+        self.mlfwi0.setPlaceholderText("<<Hedef klasör dizini>>")
+        self.mlfwi0.setAlignment(Qt.AlignCenter)
+        xf=QLabel("hmoepbgmambgkdg")
+        layout1=QVBoxLayout()
+        layout2=QHBoxLayout()
+        sspltf1=QSplitter(Qt.Vertical)
+        sspltf1.addWidget(xf)
+        ssplt.addWidget(sspltf1)
+        sspltf1.setStyleSheet("border: 0.5px solid lightblue")
+        ###############################################
+        self.ax.grid(False)
+        self.ax.axis("off")
+        self.ax2.axis("off")
+        self.ax2.grid(False)
+        self.mathsplt.addWidget(self.canvas2)    
+        main_w.addWidget(self.msplt)
+        main_w.addWidget(esplt_console_img)
+        main_w.addWidget(self.esplt)
+        main_w.addWidget(self.lsplt)
+        self.dlgs=QPushButton("GEÇMİŞİ TEMİZLE")
+        self.clgs=QPushButton("GEÇMİŞİ KOPYALA")
+        self.slgs=QPushButton("GEÇMİŞİ KAYDET")
+        self.lsplt.addWidget(self.pfix_lb)
+        self.lsplt.addWidget(self.logs)
+        self.lsplt.addWidget(self.dlgs)
+        self.lsplt.addWidget(self.clgs)
+        self.lsplt.addWidget(self.slgs)
+        esplt_console_img.addWidget(pix_lb)
+        esplt_console_img.addWidget(self.canvas)
+        esplt_console_img.addWidget(self.canvas2)
+        esplt_console_img.addWidget(self.mdsa)
+        esplt_console_img.addWidget(self.ext_lbl87)
+        self.esplt.addWidget(scnd_cb_lbl2)
+        self.esplt.addWidget(self.msbw1)
+        self.esplt.addWidget(scnd_cb_lbl4)
+        self.esplt.addWidget(self.msbw2)
+        self.esplt.addWidget(msbw3l)
+        self.esplt.addWidget(self.msbw3)
+        self.esplt.addWidget(scnd_cb_lbl)
+        self.esplt.addWidget(self.mcbw1)
+        self.esplt.addWidget(scnd_cb_lbl3)
+        self.esplt.addWidget(self.mcbw2)
+        self.esplt.addWidget(ext_lbl)
+        self.esplt.addWidget(self.mcbw3)
+        self.esplt.addWidget(self.ch_bx)
+        self.esplt.addWidget(self.ch_bx2)
+        self.msplt.addWidget(self.mlfwi1)
+        self.msplt.addWidget(self.mlfwi0)
+        self.msplt.addWidget(self.mclbr0rm)
+        self.msplt.addWidget(self.mtrw)
+        self.msplt.addWidget(self.mpst)
+        self.msplt.addWidget(self.mclbr)
+        self.msplt.addWidget(mainbtn)
+        self.tab_b.addTab(main_w,"Makine görü (görsel)")
+        self.tab_b.addTab(main_w2,"Makine görü (video)")
+        self.tab_b.addTab(ssplt,"Veri analizi")     
+        main_la41.addWidget(self.tab_b)
+        scnd_cb_lbl.setStyleSheet("""border:0.5px solid gray""")
+        ext_lbl.setStyleSheet("""border:0.5px solid gray""")
+        scnd_cb_lbl2.setStyleSheet("""border:0.5px solid gray""")
+        scnd_cb_lbl3.setStyleSheet("""border:0.5px solid gray""")
+        scnd_cb_lbl4.setStyleSheet("""border:0.5px solid gray""")
+        msbw3l.setStyleSheet("""border:0.5px solid gray""")
+        pix_lb.setStyleSheet("""border:0.5px solid gray""")
+        self.mcbw1.setStyleSheet("""background-color:white""")
+        self.mcbw2.setStyleSheet("""background-color:white""")
+        self.mcbw3.setStyleSheet("""background-color:white""")
+        mainbtn.clicked.connect(self.main_start_header)
+        self.mpst.clicked.connect(self.inc_header)
+        self.mclbr.clicked.connect(self.src_claim_header)
+        self.mtrw.clicked.connect(self.main_frs_header)
+        self.mclbr0rm.clicked.connect(self.main_frs_header_connecter_api_nonekey9)
+        self.mdsa.valueChanged.connect(self.header_changed)
+        self.dlgs.clicked.connect(self.clrls01)
+        self.clgs.clicked.connect(self.mcld5)
+        self.slgs.clicked.connect(self.scld5)
+
+        self.setCentralWidget(self.tab_b)
+    def main_start_header(self,state):
+        self.main_data1=self.mcbw1.currentText()
+        self.main_data2=self.mcbw2.currentText()
+        self.main_data3=self.mcbw3.currentText()
+        self.main_data4=self.msbw1.value()
+        self.main_data5=self.msbw2.value()
+        self.root_main_data1=self.mlfwi1.text()
+        self.cbox=self.ch_bx
+        self.cbox2=self.ch_bx2
+        self.logs.append(f"\nTime Code (TC) --> {self.crnt_t151}\nİmage Processing Type(İPT) --> {self.main_data1}\nViewer Type(VT) --> {self.main_data2}\nView Model Type(VMT) --> {self.main_data3}\nİntensity-1(İ1)--> {self.main_data4}\nİntensity-2(İ2)-->{self.main_data5}\nİntensity-3(İ3)-->{self.msbw3.value()}\nFailure:false\nSucces:true")
+        try:
+            if self.mcbw1.currentText()=="Filtreleme (Filtering)":
+                self.mcdloader()
+        except Exception as kernel_data_err05715:
+            print(f"hata: {kernel_data_err05715}")
+        if self.main_data2=="Klasik görüntüleyici":
+            try:
+                if self.main_data1=="Grileştirme (Grayscale Conversion)":
+                    image_ploting_data=_cv.imread(self.root_main_data1)
+                    clr_sys=_cv.cvtColor(image_ploting_data,_cv.COLOR_BGR2GRAY)
+                    try:
+                        if self.main_data2=="Klasik görüntüleyici":
+                            try:
+                                if self.main_data3=="3D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            ax_3d=plt.figure()
+                                            ax_3d.add_subplot(111,projection="3d")
+                                            self.ax2.imshow(clr_sys,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw()
+                                        else:
+                                            ax_3d=plt.figure()
+                                            ax_3d.add_subplot(111,projection="3d")
+                                            self.ax2.imshow(clr_sys,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw()
+                                    else:
+                                        ax_3d=plt.figure()
+                                        ax_3d.add_subplot(111,projection="3d")
+                                        self.ax2.imshow(clr_sys,cmap="gray")
+                                        self.ax2.axis('on')
+                                        self.canvas2.draw()
+                                elif self.main_data3=="2D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            self.ax2.imshow(clr_sys,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw()
+                                        else:
+                                            self.ax2.imshow(clr_sys,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw()          
+                                    else:
+                                        self.ax2.imshow(clr_sys,cmap="gray")
+                                        self.ax2.axis('off')
+                                        self.canvas2.draw()
+                            except Exception as struct_data_Err54:
+                                print(f"hata: {struct_data_Err54}")
+                        elif self.main_data2=="Klasik görüntüleyici":
+                            _cv.imshow("Gray scale",clr_sys)
+                            _cv.waitKey(0)
+                            _cv.destroyAllWindows()
+                    except Exception as keernel_main_976:
+                        print(f"hata: {keernel_main_976}")
+            except Exception as kernel_data_err05716_:
+                print(f"hata: {kernel_data_err05716_}")
+            try:
+                if self.main_data1=="Kenar Algılama (Edge Detection)":
+                    image_ploting_data673221=_cv.imread(self.root_main_data1)
+                    clr_sys_canyxsin_axef=_cv.Canny(image_ploting_data673221,threshold1=self.main_data4,threshold2=self.main_data5)
+                    try:
+                        if self.main_data2=="Klasik görüntüleyici":
+                            try:
+                                if self.main_data3=="3D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            ax_3d=plt.figure()
+                                            ax_3d.add_subplot(111,projection="3d")
+                                            self.ax2.imshow(clr_sys_canyxsin_axef,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw() 
+                                        else:
+                                            ax_3d=plt.figure()
+                                            ax_3d.add_subplot(111,projection="3d")
+                                            self.ax2.imshow(clr_sys_canyxsin_axef,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw() 
+                                    else:
+                                        ax_3d=plt.figure()
+                                        ax_3d.add_subplot(111,projection="3d")
+                                        self.ax2.imshow(clr_sys_canyxsin_axef,cmap="gray")
+                                        self.ax2.axis('off')
+                                        self.canvas2.draw() 
+                                elif self.main_data3=="2D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            self.ax2.imshow(clr_sys_canyxsin_axef,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw() 
+                                        else:
+                                            self.ax2.imshow(clr_sys_canyxsin_axef,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw()           
+                                    else:
+                                            self.ax2.imshow(clr_sys_canyxsin_axef,cmap="gray")
+                                            self.ax2.axis('off')
+                                            self.canvas2.draw() 
+                            except Exception as struct_data_Err54:
+                                print(f"hata: {struct_data_Err54}")
+                    except Exception as keernel_main_976:
+                        print(f"hata: {keernel_main_976}")
+            except Exception as kernel_data_err05716_:
+                print(f"hata: {kernel_data_err05716_}")
+            try:
+                if self.main_data1=="Eşikleme (Thresholding)":
+                    image_ploting_data=_cv.imread(self.root_main_data1,_cv.IMREAD_GRAYSCALE)
+                    clr_sys2=_cv.threshold(image_ploting_data,self.main_data4,self.main_data5,_cv.THRESH_BINARY)
+                    try:
+                        if self.main_data2=="Klasik görüntüleyici":
+                            try:
+                                if self.main_data3=="3D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            ax_3d=plt.figure()
+                                            ax_3d.add_subplot(111,projection="3d")
+                                            self.ax2.imshow(clr_sys2[1], cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw() 
+                                        else:
+                                            ax_3d=plt.figure()
+                                            ax_3d.add_subplot(111,projection="3d")
+                                            self.ax2.imshow(clr_sys2[1], cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw() 
+                                    else:
+                                        ax_3d=plt.figure()
+                                        ax_3d.add_subplot(111,projection="3d")
+                                        self.ax2.imshow(clr_sys2[1], cmap="gray")
+                                        self.ax2.axis('off')
+                                        self.canvas2.draw() 
+                                elif self.main_data3=="2D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            self.ax2.imshow(clr_sys2[1], cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw() 
+                                        else:
+                                            self.ax2.imshow(clr_sys2[1], cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw()          
+                                    else:
+                                        self.ax2.imshow(clr_sys2[1], cmap="gray")
+                                        self.ax2.axis('off')
+                                        self.canvas2.draw() 
+                            except Exception as struct_data_Err54:
+                                print(f"hata: {struct_data_Err54}")
+                    except Exception as keernel_main_976:
+                        print(f"hata: {keernel_main_976}")
+            except Exception as kernel_data_err05716_:
+                print(f"hata: {kernel_data_err05716_}")
+            if self.main_data1=="Nesne Algılama (Object Detection)":
+                try:
+                    data1=self.mdsa.value()
+                    if data1==1:
+                            xrim_algor=_cv.imread(self.mlfwi1.text())
+                            xrimg_algor=_cv.cvtColor(xrim_algor,_cv.COLOR_BGR2GRAY)
+                            _, xrimt_algor=_cv.threshold(xrimg_algor,self.msbw1.value(),self.msbw2.value(),_cv.THRESH_BINARY+_cv.THRESH_OTSU)
+                            xrimc_algor=_cv.Canny(xrimt_algor,self.msbw3.value(),self.msbw3.value())
+                            mfcd, _=_cv.findContours(xrimc_algor,_cv.RETR_EXTERNAL,_cv.CHAIN_APPROX_SIMPLE)
+                            mfcdic=xrim_algor.copy()
+                            _cv.drawContours(mfcdic,mfcd,-1,(0,255,0),2)
+                            mfcdic2=xrim_algor.copy()
+                            mfcdic23_2x=xrim_algor.copy()
+                            for mfc in mfcd:
+                                x,y,w,h=_cv.boundingRect(mfc)
+
+                                rect=_cv.rectangle(mfcdic2,(x,y),(x+w,y+h),(0,255,0),1)
+                            try:
+                                if self.main_data2=="Klasik görüntüleyici":
+                                    try:
+                                        if self.main_data3=="3D Görüntüleme":
+                                            if self.cbox.isChecked():
+                                                if self.cbox2.isChecked():
+                                                    ax_3d=plt.figure()
+                                                    ax_3d.add_subplot(111,projection="3d")
+                                                    self.ax2.imshow(_cv.cvtColor(mfcdic2,_cv.COLOR_BGR2RGB))
+                                                    self.ax2.axis('on')
+                                                    self.ax2.grid(True)
+                                                    self.canvas2.draw() 
+                                                else:
+                                                    ax_3d=plt.figure()
+                                                    ax_3d.add_subplot(111,projection="3d",cmap="gray")
+                                                    self.ax2.imshow(_cv.cvtColor(mfcdic2,_cv.COLOR_BGR2RGB))
+                                                    self.ax2.axis('on')
+                                                    self.ax2.grid(False)
+                                                    self.canvas2.draw() 
+                                            else:
+                                                ax_3d=plt.figure()
+                                                ax_3d.add_subplot(111,projection="3d")
+                                                self.ax2.imshow(_cv.cvtColor(mfcdic2,_cv.COLOR_BGR2RGB))
+                                                self.ax2.axis('off')
+                                                self.ax2.grid(False)
+                                                self.canvas2.draw()  
+                                        elif self.main_data3=="2D Görüntüleme":
+                                            if self.cbox.isChecked():
+                                                if self.cbox2.isChecked():
+                                                    self.ax2.imshow(_cv.cvtColor(mfcdic2,_cv.COLOR_BGR2RGB))
+                                                    self.ax2.axis('on')
+                                                    self.ax2.grid(True)
+                                                    self.canvas2.draw() 
+                                                else:
+                                                    self.ax2.imshow(_cv.cvtColor(mfcdic2,_cv.COLOR_BGR2RGB))
+                                                    self.ax2.axis('on')
+                                                    self.ax2.grid(False)
+                                                    self.canvas2.draw()          
+                                            else:
+                                                self.ax2.imshow(_cv.cvtColor(mfcdic2,_cv.COLOR_BGR2RGB))
+                                                self.ax2.axis('off')
+                                                self.ax2.grid(False)
+                                                self.canvas2.draw() 
+                                    except Exception as struct_data_Err54:
+                                        print(f"hata: {struct_data_Err54}")
+                            except Exception as keernel_main_976:
+                                print(f"hata: {keernel_main_976}")
+                    if self.mdsa.value()==2:
+                        if self.main_data1=="Nesne Algılama (Object Detection)":
+                            xrim_algorf1=_cv.imread(self.mlfwi1.text())
+                            xrimg_algorf1=_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2GRAY)
+                            xrimc_algorf1=_cv.Canny(xrimg_algorf1,self.msbw3.value(),self.msbw3.value())
+                            mfcdf1, _=_cv.findContours(xrimc_algorf1,_cv.RETR_EXTERNAL,_cv.CHAIN_APPROX_SIMPLE)
+                            min_xf1,min_yf1=np.inf,np.inf
+                            max_xf1,max_yf1=50,50
+                            for cnts9f4 in mfcdf1:
+                                x,y,w,h=_cv.boundingRect(cnts9f4)
+                                min_xf1=min(min_xf1,x)
+                                min_yf1=min(min_yf1,y)
+                                max_xf1=max(max_xf1,x+w)
+                                max_yf1=max(max_yf1,y+h)
+                            rect=_cv.rectangle(xrim_algorf1,(min_xf1,min_yf1),(max_xf1,max_yf1),(0,255,0),2)
+                            try:
+                                    if self.main_data2=="Klasik görüntüleyici":
+                                        try:
+                                            if self.main_data3=="3D Görüntüleme":
+                                                if self.cbox.isChecked():
+                                                    if self.cbox2.isChecked():
+                                                        ax_3d=plt.figure()
+                                                        ax_3d.add_subplot(111,projection="3d",cmap="gray")
+                                                        self.ax2.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                        self.ax2.axis('on')
+                                                        self.ax2.grid(True)
+                                                        self.canvas2.draw()    
+                                                    else:
+                                                        ax_3d=plt.figure()
+                                                        ax_3d.add_subplot(111,projection="3d",cmap="gray")
+                                                        self.ax2.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                        self.ax2.axis('on')
+                                                        self.ax2.grid(False)
+                                                        self.canvas2.draw() 
+                                                else:
+                                                    ax_3d=plt.figure()
+                                                    ax_3d.add_subplot(111,projection="3d")
+                                                    self.ax2.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                    self.ax2.axis('off')
+                                                    self.ax2.grid(False)
+                                                    self.canvas2.draw() 
+                                                if self.cbox.isChecked():
+                                                    if self.cbox2.isChecked():
+                                                        ax_3d=plt.figure()
+                                                        ax_3d.add_subplot(111,projection="3d")
+                                                        self.ax2.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                        self.ax2.axis('on')
+                                                        self.ax2.grid(True)
+                                                        self.canvas2.draw() 
+                                                    else:          
+                                                        plt.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                        plt.axis("on")
+                                                        plt.grid(False)
+                                                        plt.show()
+                                                else:
+                                                    plt.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                    plt.axis('off')
+                                                    plt.grid(False)
+                                                    plt.show()
+                                            elif self.main_data3=="2D Görüntüleme":
+                                                if self.cbox.isChecked():
+                                                    if self.cbox2.isChecked():
+
+                                                        self.ax2.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                        self.ax2.axis('on')
+                                                        self.ax2.grid(True)
+                                                        self.canvas2.draw()    
+                                                    else:
+                                                        self.ax2.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                        self.ax2.axis('on')
+                                                        self.ax2.grid(False)
+                                                        self.canvas2.draw() 
+                                                else:
+                                                    self.ax2.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                    self.ax2.axis('off')
+                                                    self.ax2.grid(False)
+                                                    self.canvas2.draw() 
+                                                if self.cbox.isChecked():
+                                                    if self.cbox2.isChecked():
+                                                        self.ax2.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                        self.ax2.axis('on')
+                                                        self.ax2.grid(True)
+                                                        self.canvas2.draw() 
+                                                    else:          
+                                                        self.ax2.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                        self.ax2.axis("on")
+                                                        self.ax2.grid(False)
+                                                        self.canvas2.draw()
+                                                else:
+                                                    self.ax2.imshow(_cv.cvtColor(xrim_algorf1,_cv.COLOR_BGR2RGB))
+                                                    self.ax2.axis('off')
+                                                    self.ax2.grid(False)
+                                                    self.canvas2.draw()
+                                        except Exception as struct_data_Err54:
+                                            print(f"hata: {struct_data_Err54}")
+                            except Exception as kernel_a990:
+                                print(f"hata-frame: {kernel_a990}")
+                except Exception as kernel_a990:
+                    print(f"hata-frame: {kernel_a990}")
+            try:                
+                if self.main_data1=="Histogram Eşitleme (Histogram Equalization)":
+                    image_ploting_data=_cv.imread(self.root_main_data1,_cv.IMREAD_GRAYSCALE)
+                    clr_sys28753=_cv.equalizeHist(image_ploting_data)
+                    try:
+                        if self.main_data2=="Klasik görüntüleyici":
+                            try:
+                                if self.main_data3=="3D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            ax_3d=plt.figure()
+                                            ax_3d.add_subplot(111,projection="3d")
+                                            self.ax2.imshow(clr_sys28753,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw()
+                                        else:
+                                            ax_3d=plt.figure()
+                                            ax_3d.add_subplot(111,projection="3d",cmap="gray")
+                                            self.ax2.imshow(clr_sys28753)
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw()
+                                    else:
+                                        ax_3d=plt.figure()
+                                        ax_3d.add_subplot(111,projection="3d")
+                                        self.ax2.imshow(clr_sys28753,cmap="gray")
+                                        self.ax2.axis('off')
+                                        self.ax2.grid(False)
+                                        self.canvas2.draw()
+                                elif self.main_data3=="2D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            self.ax2.imshow(clr_sys28753,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw()
+                                        else:
+                                            self.ax2.imshow(clr_sys28753,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw()            
+                                    else:
+                                        self.ax2.imshow(clr_sys28753,cmap="gray")
+                                        self.ax2.axis('off')
+                                        self.ax2.grid(False)
+                                        self.canvas2.draw()
+                            except Exception as struct_data_Err54:
+                                print(f"hata: {struct_data_Err54}")
+                    except Exception as keernel_main_976:
+                        print(f"hata: {keernel_main_976}")
+            except Exception as kernel_data_err05716_:
+                print(f"hata: {kernel_data_err05716_}")
+            try:
+                if self.mcbw1.currentText()=="Özellik Çıkarımı (Feature Extraction)":
+                    try:
+                        self.mspsm2=QSplashScreen(self.esplt)
+                        self.mspsm2.move(self.x(),self.y())
+                        self.mspsm2.resize(770,150)
+                        ml=QVBoxLayout()
+                        ms=QSplitter(Qt.Horizontal)
+                        msv=QSplitter(Qt.Vertical)
+                        msv2=QSplitter(Qt.Vertical)
+
+                        mscm_lbl=QLabel("↓↓--Özellik çıkarım türü--↓↓")
+                        self.mscm_lbl_cv1c12=QLabel("MEVCUT SEÇİLİ:")
+                        msc_mab1m=QPushButton("Onayla ve kapat")
+                        mscm_lbl.setStyleSheet("""font-size:15px;font-weight:bold;border:0.5px solid black""")
+                        self.mscm_lbl_cv1c12.setStyleSheet("border:1px solid darkred")
+                        self.mscm_lbl_cv1c12.setAlignment(Qt.AlignCenter)
+                        mscm_lbl.setAlignment(Qt.AlignCenter)
+                        self.mscm_c12=QPushButton("Köşe çıkarımı")
+                        self.mscm_c22=QPushButton("EMPTY_TEST_")
+                        self.mscm_c32=QPushButton("EMPTY_TEST_")
+                        self.mscm_c42=QPushButton("EMPTY_TEST_")
+                        ml.addWidget(msv)
+                        ml.addWidget(ms)       
+                        ml.addWidget(msv2)            
+                        msv.addWidget(mscm_lbl)
+                        ms.addWidget(self.mscm_c12)
+                        ms.addWidget(self.mscm_c22)
+                        ms.addWidget(self.mscm_c32)
+                        ms.addWidget(self.mscm_c42)
+                        msv2.addWidget(self.mscm_lbl_cv1c12)
+                        msv2.addWidget(msc_mab1m)
+                        self.mspsm2.setLayout(ml)
+                        self.mscm_c12.clicked.connect(self.add_adonis_adb_tx_m12)
+                        self.mscm_c22.clicked.connect(self.add_adonis_adb_tx_m22)
+                        self.mscm_c32.clicked.connect(self.add_adonis_adb_tx_m32)
+                        self.mscm_c42.clicked.connect(self.add_adonis_adb_tx_m42)
+                        msc_mab1m.clicked.connect(self.main_upd_hdr84)
+                        self.mspsm2.show()
+                    except Exception as mtm1_err0194_kernel01:
+                        print(f"hata: {mtm1_err0194_kernel01}")
+            except Exception as mtm1_err0194_kernel0155:
+                print(f"hata: {mtm1_err0194_kernel0155}")
+            try:
+                if self.main_data1=="Kontür Algılama (Contour Detection)": 
+                    try:
+                        mfcdic2g2hsh = _cv.imread(self.mlfwi1.text())
+                        gray = _cv.cvtColor(mfcdic2g2hsh, _cv.COLOR_BGR2GRAY)
+                        edges = _cv.Canny(gray, 50, 150)
+                        contours, _ = _cv.findContours(edges, _cv.RETR_EXTERNAL, _cv.CHAIN_APPROX_SIMPLE)
+                        _cv.drawContours(mfcdic2g2hsh, contours, -1, (0, 255, 0), 2)
+                        try:
+                            try:
+                                try:
+                                    if self.main_data2=="Klasik görüntüleyici":
+                                        try:
+                                            if self.main_data3=="3D Görüntüleme":
+                                                if self.cbox.isChecked():
+                                                    if self.cbox2.isChecked():
+                                                        ax_3d=plt.figure()
+                                                        ax_3d.add_subplot(111,projection="3d",cmap="gray")
+                                                        self.ax2.imshow(_cv.cvtColor(mfcdic2g2hsh,_cv.COLOR_BGR2RGB))
+                                                        self.ax2.axis('on')
+                                                        self.ax2.grid(True)
+                                                        self.canvas2.draw()
+                                                    else:
+                                                        ax_3d=plt.figure()
+                                                        ax_3d.add_subplot(111,projection="3d",cmap="gray")
+                                                        self.ax2.imshow(_cv.cvtColor(mfcdic2g2hsh,_cv.COLOR_BGR2RGB))
+                                                        self.ax2.axis('on')
+                                                        self.ax2.grid(False)
+                                                        self.canvas2.draw()
+                                                else:
+                                                    ax_3d=plt.figure()
+                                                    ax_3d.add_subplot(111,projection="3d")
+                                                    self.ax2.imshow(_cv.cvtColor(mfcdic2g2hsh,_cv.COLOR_BGR2RGB))
+                                                    self.ax2.axis('off')
+                                                    self.ax2.grid(False)
+                                                    self.canvas2.draw()
+                                            elif self.main_data3=="2D Görüntüleme":
+                                                if self.cbox.isChecked():
+                                                    if self.cbox2.isChecked():
+                                                        self.ax2.imshow(_cv.cvtColor(mfcdic2g2hsh,_cv.COLOR_BGR2RGB))
+                                                        self.ax2.axis('on')
+                                                        self.ax2.grid(True)
+                                                        self.canvas2.draw()
+                                                    else:
+                                                        self.ax2.imshow(_cv.cvtColor(mfcdic2g2hsh,_cv.COLOR_BGR2RGB))
+                                                        self.ax2.axis('on')
+                                                        self.ax2.grid(False)
+                                                        self.canvas2.draw()            
+                                                else:
+                                                    self.ax2.imshow(_cv.cvtColor(mfcdic2g2hsh,_cv.COLOR_BGR2RGB))
+                                                    self.ax2.axis('off')
+                                                    self.ax2.grid(False)
+                                                    self.canvas2.draw()
+                                        except Exception as struct_data_Err54:
+                                            print(f"hata: {struct_data_Err54}")
+                                except:
+                                    print()
+                            except:
+                                print()            
+                        except Exception as keernel_main_976:
+                            print(f"hata: {keernel_main_976}")
+                    except Exception as kernel_a990:
+                        print(f"hata-frame: {kernel_a990}")
+            except Exception as kernel_a990:
+                print(f"hata-frame: {kernel_a990}")
+            try:
+                if self.main_data1=="Histogram Eşitleme (Histogram Equalization)":
+                    image_ploting_data=_cv.imread(self.root_main_data1,_cv.IMREAD_GRAYSCALE)
+                    clr_sys28753=_cv.equalizeHist(image_ploting_data)
+                    try:
+                        if self.main_data2=="Klasik görüntüleyici":
+                            try:
+                                if self.main_data3=="3D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            self.ax2.imshow(clr_sys28753,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw()
+                                        else:
+                                            ax_3d=plt.figure()
+                                            ax_3d.add_subplot(111,projection="3d",cmap="gray")
+                                            self.ax2.imshow(clr_sys28753)
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw()
+                                    else:
+                                        ax_3d=plt.figure()
+                                        ax_3d.add_subplot(111,projection="3d")
+                                        self.ax2.imshow(clr_sys28753,cmap="gray")
+                                        self.ax2.axis('off')
+                                        self.ax2.grid(False)
+                                        self.canvas2.draw()
+                                elif self.main_data3=="2D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            self.ax2.imshow(clr_sys28753,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw()
+                                        else:
+                                            self.ax2.imshow(clr_sys28753,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw()            
+                                    else:
+                                        self.ax2.imshow(clr_sys28753,cmap="gray")
+                                        self.ax2.axis('off')
+                                        self.ax2.grid(False)
+                                        self.canvas2.draw()
+                            except Exception as struct_data_Err54:
+                                print(f"hata: {struct_data_Err54}")
+                    except Exception as keernel_main_976:
+                        print(f"hata: {keernel_main_976}")
+            except Exception as kernel_data_err05716_:
+                print(f"hata: {kernel_data_err05716_}")                
+            except Exception as kernel_endless_err041:
+                print(kernel_endless_err041)
+    def main_upd_hdr84(self):
+            try:
+                if self.mscm_lbl_cv1c12.text()=="MEVCUT SEÇİLİ: Köşe çıkarımı":
+                    image_ploting_data0987=_cv.imread(self.mlfwi1.text())
+                    clr_sys28753=_cv.cvtColor(image_ploting_data0987,_cv.COLOR_BGR2GRAY)
+                    clr_sys28753_syntazx=_cv.cornerHarris(clr_sys28753,self.msbw1.value(),self.msbw2.value(),self.msbw3.value())
+                    image_ploting_data0987[clr_sys28753_syntazx>0.01*clr_sys28753_syntazx.max()]=[0,0,255]
+                    try:
+                        if self.main_data2=="Klasik görüntüleyici":
+                            try:
+                                if self.main_data3=="3D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            self.ax2.imshow(image_ploting_data0987,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw()
+                                        else:
+                                            ax_3d=plt.figure()
+                                            ax_3d.add_subplot(111,projection="3d",cmap="gray")
+                                            self.ax2.imshow(image_ploting_data0987)
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw()
+                                    else:
+                                        ax_3d=plt.figure()
+                                        ax_3d.add_subplot(111,projection="3d")
+                                        self.ax2.imshow(image_ploting_data0987,cmap="gray")
+                                        self.ax2.axis('off')
+                                        self.canvas2.draw()
+                                elif self.main_data3=="2D Görüntüleme":
+                                    if self.cbox.isChecked():
+                                        if self.cbox2.isChecked():
+                                            self.ax2.imshow(image_ploting_data0987,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(True)
+                                            self.canvas2.draw()
+                                        else:
+                                            self.ax2.imshow(image_ploting_data0987,cmap="gray")
+                                            self.ax2.axis('on')
+                                            self.ax2.grid(False)
+                                            self.canvas2.draw()            
+                                    else:
+                                        self.ax2.imshow(image_ploting_data0987,cmap="gray")
+                                        self.ax2.axis('off')
+                                        self.canvas2.draw()
+                            except Exception as struct_data_Err54:
+                                print(f"hata: {struct_data_Err54}")
+                    except Exception as keernel_main_976:
+                        print(f"hata: {keernel_main_976}")
+                    except Exception as kernel_data_err05716_:
+                        print(f"hata: {kernel_data_err05716_}")
+            except Exception as kernel_db41:
+                print(f"hata: {kernel_db41}")
+    def mcdloader(self):
+        try:
+            if self.mcbw1.currentText()=="Filtreleme (Filtering)":
+                try:
+                    self.mspsm1=QSplashScreen(self.esplt)
+                    self.mspsm1.move(self.x(),self.y())
+                    self.mspsm1.resize(770,150)
+                    ml=QVBoxLayout()
+                    ms=QSplitter(Qt.Horizontal)
+                    msv=QSplitter(Qt.Vertical)
+                    msv2=QSplitter(Qt.Vertical)
+
+                    mscm_lbl=QLabel("↓↓--Filtreleme türü--↓↓")
+                    self.mscm_lbl_cv1c1=QLabel("MEVCUT SEÇİLİ:")
+                    msc_mab1m=QPushButton("Onayla ve kapat")
+                    mscm_lbl.setStyleSheet("""font-size:15px;font-weight:bold;border: 0.5px solid black""")
+                    self.mscm_lbl_cv1c1.setStyleSheet("border:1px solid darkred")
+                    self.mscm_lbl_cv1c1.setAlignment(Qt.AlignCenter)
+                    mscm_lbl.setAlignment(Qt.AlignCenter)
+                    self.mscm_c1=QPushButton("Gauss Bulanıklaştırma")
+                    self.mscm_c2=QPushButton("Medyan Filtresi")
+                    self.mscm_c3=QPushButton("Çift Taraflı Filtre")
+                    self.mscm_c4=QPushButton("Keskinleştirme")
+                    ml.addWidget(msv)
+                    ml.addWidget(ms)       
+                    ml.addWidget(msv2)            
+                    msv.addWidget(mscm_lbl)
+                    ms.addWidget(self.mscm_c1)
+                    ms.addWidget(self.mscm_c2)
+                    ms.addWidget(self.mscm_c3)
+                    ms.addWidget(self.mscm_c4)
+                    msv2.addWidget(self.mscm_lbl_cv1c1)
+                    msv2.addWidget(msc_mab1m)
+                    self.mspsm1.setLayout(ml)
+                    self.mscm_c1.clicked.connect(self.add_adonis_adb_tx_m1)
+                    self.mscm_c2.clicked.connect(self.add_adonis_adb_tx_m2)
+                    self.mscm_c3.clicked.connect(self.add_adonis_adb_tx_m3)
+                    self.mscm_c4.clicked.connect(self.add_adonis_adb_tx_m4)
+                    msc_mab1m.clicked.connect(self.main_upd_hdr)
+                    self.mspsm1.show()
+                except Exception as kernel_api_err8671:
+                    print(f"hata: {kernel_api_err8671}")       
+            else:
+                print("memory used: failure\nsending signal: 01100110 01100001 01101001 01101100 01110101 01110010 01100101\nstatus: failed")
+                self.logs.append(f"TimeCode(TC)--> {self.crnt_t151} Log Message --> memory used: failure\nsending signal: 01100110 01100001 01101001 01101100 01110101 01110010 01100101\nstatus: failed")
+        except Exception as kernel_10959kg_err75:
+            print(f"hata: {kernel_10959kg_err75}")      
+    def main_upd_hdr8(self):
+        self.mspsm1.destroy()
+    def main_frs_header(self,index):
+        self.r_data=self.mrootsys.filePath(index)
+        self.n_data=self.mrootsys.fileName(index)
+        print(f"file system current file root>>>> ||  {self.r_data}\nfile system current file name>>>> ||  {self.n_data}\n")
+        self.logs.append(f"\nTime Code (TC) --> {self.crnt_t151}\nfile system current file root>>>> ||  {self.r_data}\nfile system current file name>>>> ||  {self.n_data}\n")
+        self.mlfwi1.setText(self.r_data)
+    def main_frs_header_connecter_api_nonekey9(self,index):
+        try:
+            self.logs.append(f"\nTime Code (TC) --> {self.crnt_t151}\nfile system current file root>>>> ||  {self.mlfwi0.text()}\n Action Type(AT) --> FİLE SYSTEM MAİN ROOT DİRECTORY CHANGED\nFailure:false\nSucces:true")
+            self.mtrw.setModel(self.mrootsys)
+            self.mrootsys.setRootPath(self.mlfwi0.text())
+            self.mtrw.setRootIndex(self.mrootsys.index(self.mlfwi0.text()))
+        except Exception as file_root_err_n09675:
+            QMessageBox.warning(self,"Dikkat","Lütfen geçerli bir klasör yolu girin")
+            print(f"hata: {file_root_err_n09675}")
+            self.logs.append(f"\nTime Code (TC) --> {self.crnt_t151}\nfile system current file root>>>> ||  {self.mlfwi0.text()}\n Action Type(AT) --> FİLE SYSTEM MAİN ROOT DİRECTORY CHANGED\nFailure:true\nSucces:false")
+    def add_adonis_adb_tx_m1(self): 
+        data=self.mscm_c1.text()
+        self.mscm_lbl_cv1c1.setText(f"MEVCUT SEÇİLİ: {data}")
+    def add_adonis_adb_tx_m2(self):
+        data=self.mscm_c2.text()
+        self.mscm_lbl_cv1c1.setText(f"MEVCUT SEÇİLİ: {data}")
+    def add_adonis_adb_tx_m3(self):
+        data=self.mscm_c3.text()
+        self.mscm_lbl_cv1c1.setText(f"MEVCUT SEÇİLİ: {data}")
+    def add_adonis_adb_tx_m4(self):
+        data=self.mscm_c4.text()
+        self.mscm_lbl_cv1c1.setText(f"MEVCUT SEÇİLİ: {data}")
+    def add_adonis_adb_tx_m12(self): 
+        data2=self.mscm_c12.text()
+        self.mscm_lbl_cv1c12.setText(f"MEVCUT SEÇİLİ: {data2}")
+    def add_adonis_adb_tx_m22(self):
+        data2=self.mscm_c22.text()
+        self.mscm_lbl_cv1c12.setText(f"MEVCUT SEÇİLİ: {data2}")
+    def add_adonis_adb_tx_m32(self):
+        data2=self.mscm_c32.text()
+        self.mscm_lbl_cv1c12.setText(f"MEVCUT SEÇİLİ: {data2}")
+    def add_adonis_adb_tx_m42(self):
+        data2=self.mscm_c42.text()
+        self.mscm_lbl_cv1c12.setText(f"MEVCUT SEÇİLİ: {data2}")
+    def main_upd_hdr(self):
+        try:
+            self.mspsm1.destroy()
+        except Exception as kernel_89err_98:
+            print(f"hata-1: {kernel_89err_98}")
+        try:
+            print("trying")
+            if self.mscm_lbl_cv1c1.text()=="MEVCUT SEÇİLİ: Gauss Bulanıklaştırma":
+                print("enabled")
+                self.mdif1=_cv.imread(self.mlfwi1.text())
+                self.mdif1_clrsys=_cv.GaussianBlur(self.mdif1,(self.msbw1.value(),self.msbw2.value()),0)
+                try:
+                    if self.main_data2=="Klasik görüntüleyici":
+                        if self.mcbw3.currentText()=="3D Görüntüleme":
+                            if self.ch_bx.isChecked():
+                                ax_3d=plt.figure()
+                                ax_3d.add_subplot(111,projection="3d")
+                                self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys,_cv.COLOR_BGR2RGB))
+                                self.ax2.axis("on")
+                                self.ax2.grid(False)
+                                self.canvas2.draw()
+                            elif self.ch_bx2.isChecked():
+                                ax_3d=plt.figure()
+                                ax_3d.add_subplot(111,projection="3d")
+                                self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys,_cv.COLOR_BGR2RGB))
+                                self.ax2.axis("on")
+                                self.ax2.grid(True)
+                                self.canvas2.draw()
+                            else:
+                                ax_3d=plt.figure()
+                                ax_3d.add_subplot(111,projection="3d")
+                                self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys,_cv.COLOR_BGR2RGB))
+                                self.ax2.axis("off")
+                                self.ax2.grid(False)
+                                self.canvas2.draw()
+                        try:
+                            if self.mcbw3.currentText()=="2D Görüntüleme":
+                                if self.ch_bx.isChecked():
+                                    self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys,_cv.COLOR_BGR2RGB))
+                                    self.ax2.axis("on")
+                                    self.ax2.grid(False)
+                                    self.canvas2.draw()
+                                if self.ch_bx2.isChecked():
+                                    self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys,_cv.COLOR_BGR2RGB))
+                                    self.ax2.axis("on")
+                                    self.ax2.grid(True)
+                                    self.canvas2.draw()
+                                else:
+                                    self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys,_cv.COLOR_BGR2RGB))
+                                    self.ax2.axis("off")
+                                    self.ax2.grid(False)
+                                    self.canvas2.draw()
+                        except Exception as kernel_wieverkey91:
+                            print(f"hata: {kernel_wieverkey91}")
+                except Exception as kernel_wievererr_94:
+                    print(f"hata1: {kernel_wievererr_94}")
+        except Exception as kernel_84:
+            print(f"hata2: {kernel_84}")  
+        if self.mscm_lbl_cv1c1.text()=="MEVCUT SEÇİLİ: Medyan Filtresi":
+            try:
+                sinx_data1=self.msbw1.value()
+                sinx_data2=self.msbw2.value()
+                cosy_data1=self.mlfwi1.text()
+                self.mdif1=_cv.imread(cosy_data1)
+                self.mdif1_clrsys91=_cv.medianBlur(self.mdif1,ksize=sinx_data1)
+                if self.main_data2=="Klasik görüntüleyici":
+                    if self.mcbw3.currentText()=="3D Görüntüleme":
+                        if self.ch_bx.isChecked():
+                            ax_3d=plt.figure()
+                            ax_3d.add_subplot(111,projection="3d")
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys91,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("on")
+                            self.ax2.grid(False)
+                            self.canvas2.draw()
+                        elif self.ch_bx2.isChecked():
+                            ax_3d=plt.figure()
+                            ax_3d.add_subplot(111,projection="3d")
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys91,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("on")
+                            self.ax2.grid(True)
+                            self.canvas2.draw()
+                        else:
+                            ax_3d=plt.figure()
+                            ax_3d.add_subplot(111,projection="3d")
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys91,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("off")
+                            self.ax2.grid(False)
+                            self.canvas2.draw()
+                try:
+                    if self.mcbw3.currentText()=="2D Görüntüleme":
+                        if self.ch_bx.isChecked():
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys91,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("on")
+                            self.ax2.grid(False)
+                            self.canvas2.draw()
+                        if self.ch_bx2.isChecked():
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys91,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("on")
+                            self.ax2.grid(True)
+                            self.canvas2.draw()
+                        else:
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys91,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("off")
+                            self.ax2.grid(False)
+                            self.canvas2.draw()
+                except Exception as kernel_wieverkey91:
+                    print(f"hata: {kernel_wieverkey91}")    
+            except Exception as kernel_wievererr_94:
+                print(f"hata1: {kernel_wievererr_94}")
+            except Exception as kernel_84:
+                print(f"hata2: {kernel_84}")  
+        if self.mscm_lbl_cv1c1.text()=="MEVCUT SEÇİLİ: Çift Taraflı Filtre":
+            try:
+                sinx_data1=self.msbw1.value()
+                sinx_data2=self.msbw2.value()
+                sinx_data3=self.msbw3.value()
+                cosy_data1=self.mlfwi1.text()
+                self.mdif12387=_cv.imread(cosy_data1)
+                self.mdif1_clrsys915=_cv.bilateralFilter(self.mdif12387,sinx_data1,sinx_data2,sinx_data3)
+                if self.main_data2=="Klasik görüntüleyici":
+                    if self.mcbw3.currentText()=="3D Görüntüleme":
+                        if self.ch_bx.isChecked():
+                            ax_3d=plt.figure()
+                            ax_3d.add_subplot(111,projection="3d")
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys915,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("on")
+                            self.ax2.grid(False)
+                            self.canvas2.draw()
+                        elif self.ch_bx2.isChecked():
+                            ax_3d=plt.figure()
+                            ax_3d.add_subplot(111,projection="3d")
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys915,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("on")
+                            self.ax2.grid(True)
+                            self.canvas2.draw()
+                        else:
+                            ax_3d=plt.figure()
+                            ax_3d.add_subplot(111,projection="3d")
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys915,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("off")
+                            self.ax2.grid(False)
+                            self.canvas2.draw()
+                try:
+                    if self.mcbw3.currentText()=="2D Görüntüleme":
+                        if self.ch_bx.isChecked():
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys915,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("on")
+                            self.ax2.grid(False)
+                            self.canvas2.draw()
+                        if self.ch_bx2.isChecked():
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys915,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("on")
+                            self.ax2.grid(True)
+                            self.canvas2.draw()
+                        else:
+                            self.ax2.imshow(_cv.cvtColor(self.mdif1_clrsys915,_cv.COLOR_BGR2RGB))
+                            self.ax2.axis("off")
+                            self.ax2.grid(False)
+                            self.canvas2.draw()
+                except Exception as kernel_wieverkey91:
+                    print(f"hata: {kernel_wieverkey91}")
+            except Exception as kernel_wievererr_94:
+                print(f"hata1: {kernel_wievererr_94}")
+            except Exception as kernel_84:
+                print(f"hata2: {kernel_84}") 
+        if self.mscm_lbl_cv1c1.text()=="MEVCUT SEÇİLİ: Keskinleştirme":
+            try:
+                sinx_data1=self.msbw1.value()
+                sinx_data2=self.msbw2.value()
+                sinx_data3=self.msbw3.value()
+                cosy_data1=self.mlfwi1.text()
+                readed_xsincosy=_cv.imread(cosy_data1)
+                self.mdif1238517=_cv.cvtColor(readed_xsincosy,_cv.COLOR_BGR2GRAY)
+                self.mdif1_clrsys03915=_cv.Laplacian(self.mdif1238517,_cv.CV_64F)
+                if self.main_data2=="Klasik görüntüleyici":
+                    if self.mcbw3.currentText()=="3D Görüntüleme":
+                        if self.ch_bx.isChecked():
+                            ax_3d=plt.figure()
+                            ax_3d.add_subplot(111,projection="3d")
+                            self.ax2.imshow(self.mdif1_clrsys03915)
+                            self.ax2.axis("on")
+                            self.ax2.grid(False)
+                            self.canvas2.draw()
+                        elif self.ch_bx2.isChecked():
+                            ax_3d=plt.figure()
+                            ax_3d.add_subplot(111,projection="3d")
+                            self.ax2.imshow(self.mdif1_clrsys03915)
+                            self.ax2.axis("on")
+                            self.ax2.grid(True)
+                            self.canvas2.draw()
+                        else:
+                            ax_3d=plt.figure()
+                            ax_3d.add_subplot(111,projection="3d")
+                            self.ax2.imshow(self.mdif1_clrsys03915)
+                            self.ax2.axis("off")
+                            self.ax2.grid(False)
+                            self.canvas2.draw()
+                try:
+                    if self.mcbw3.currentText()=="2D Görüntüleme":
+                        if self.ch_bx.isChecked():
+                            self.ax2.imshow(self.mdif1_clrsys03915)
+                            self.ax2.axis("on")
+                            self.ax2.grid(False)
+                            self.canvas2.show()
+                        if self.ch_bx2.isChecked():
+                            self.ax2.imshow(self.mdif1_clrsys03915)
+                            self.ax2.axis("on")
+                            self.ax2.grid(True)
+                            self.canvas2.show()
+                        else:
+                            self.ax2.imshow(self.mdif1_clrsys03915)
+                            self.ax2.axis("off")
+                            self.ax2.grid(False)
+                            self.canvas2.show()
+                except Exception as kernel_wieverkey91:
+                    print(f"hata: {kernel_wieverkey91}")
+            except Exception as kernel_wievererr_94:
+                print(f"hata1: {kernel_wievererr_94}")
+            except Exception as kernel_wievererr_94:
+                print(f"hata1: {kernel_wievererr_94}")
+            except Exception as kernel_84:
+                print(f"hata2: {kernel_84}") 
+    def header_changed(self):
+        if self.mdsa.value()==1:
+            self.ext_lbl87.setText("Çift algılama")
+        if self.mdsa.value()==2:
+            self.ext_lbl87.setText("Tek algılama")
+        if self.mdsa.value()==0:
+            self.ext_lbl87.setText("NESNE ALGILAMA TÜRÜ: #seçilmedi#")
+    def src_claim_header(self):
+        path=self.mlfwi1.text()
+        self.logs.append(f"\nTime Code(TC) --> {self.crnt_t151}\nİmage Path(İP) --> {path}\nAction Type(AT) --> ASSIGNINED A IMAGE(AAI)")
+        self.ax.set_title("Ham Görüntü")
+        try:
+            i_data=mpimg.imread(path)
+            if path:
+                self.logs.append("Succes:true\nFailure:false")
+            self.ax.set_title("Ham Görüntü")
+            self.ax.clear()
+            self.ax.axis("off")
+            self.ax.grid(False)
+            self.ax.imshow(i_data)
+            self.ax.set_title("Ham Görüntü")
+            self.canvas.draw()
+        except Exception as kernel_www_err:
+            print(f"www_k hata: {kernel_www_err}")
+    def inc_header(self):
+        data=self.mlfwi1.text()
+        self.logs.append(f"\nTime Code(TC) --> {self.crnt_t151}\nİmage Path(İP)--> {data}\nAction Type(AT) --> COPY FİLE PATH\nFailure:false\nSucces:true")
+        cb=QApplication.clipboard()
+        cb.setText(data)
+    def endstatus0(self):
+        self.crnt_t1512=_dt_interwal.now()
+        self.crnt_t151=self.crnt_t1512.strftime("Tarih: %D: Saat/Dakika: %H:%M:%S")
+        self.pfix_lb.setText(f"{self.crnt_t151}")
+    def clrls01(self):
+        msg_que = QMessageBox.question(self, "!DİKKAT!", "Tüm geçmişi temizlemek istediğinizden emin misiniz?", QMessageBox.Ok | QMessageBox.No)
+        if msg_que == QMessageBox.Ok:
+            try:
+                self.logs.clear()
+            except Exception as f09518610jed:
+                print(f"hata: {f09518610jed}")
+        if msg_que == QMessageBox.No:
+            try:
+                pass
+            except Exception as  f09518610:
+                print(f"hata: {f09518610}")
+    def mcld5(self):
+        try:
+            self.logs.selectAll()
+            self.logs.copy()
+            msg=QMessageBox.information(self,"↓↓Bilgilendirme↓↓","Geçmiş kopyalandı.")
+        except Exception as f096151kernel:
+            print(f"hata: {f096151kernel}")
+    def scld5(self):
+        self.main_dataf987=self.logs.toPlainText()
+        self.fd=QFileDialog()
+        data_queuer=self.fd.getOpenFileName()
+        try:    
+            if data_queuer[0]:
+                with open(data_queuer[0],'w',encoding="utf-8") as kernel096728649:
+                    qfag89=QMessageBox.question(self,"!DİKKAT!","Kaydetme işleminden sonra üzerinde değişiklik yapılan dosyanın değişiklikleri geri alınamaz ve dosya içeriği silinir devam etmek istiyor musunuz?",QMessageBox.Ok | QMessageBox.No)
+                    if qfag89 == QMessageBox.Ok:
+                        kernel096728649.write(self.main_dataf987)
+                    else:
+                        pass
+        except Exception as exceptionsf09:
+            print(f"hata: {exceptionsf09}")
+if __name__=="__main__":    
+    sp=QApplication(_s.argv)
+    sw=mainF()
+    sw.show()
+    _s.exit(sp.exec_())
