@@ -10,6 +10,10 @@ playsound
 
 pyaudio
 
+pyautogui
+
+pyfiglet
+
 webbrowser
 
 selenium
@@ -67,4 +71,21 @@ BeatifulySoup-4
 pyqt6
 
 pygame
+
+argparse
+
+random
+
+aqlite3
+
+Jason
+
+Re
+
+regex
+
+basa64
+
+
+
 
