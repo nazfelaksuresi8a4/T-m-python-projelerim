@@ -54,6 +54,12 @@ class mainUİ(QMainWindow):
         self.splt_4_1 = QSplitter(Qt.Vertical)
         self.splt_4_2 = QSplitter(Qt.Vertical)
 
+        self.menu_1_splt = QSplitter(Qt.Horizontal) 
+        self.menu_2_splt = QSplitter(Qt.Horizontal)
+
+        self.speed_indicator_lbl_f = QLabel()
+        self.speed_indicator_lbl_f.setAlignment(Qt.AlignCenter)
+
         self.sound_info_label_splt = QSplitter(Qt.Vertical)
         
         #widget-settings
@@ -98,15 +104,15 @@ class mainUİ(QMainWindow):
         fun_label.setObjectName('menu_widget_fun_label')
 
         start_anim_graph_sin = QPushButton(text='Animasyonlu sinüs grafiği başlat')
-        start_anim_graph_sincos = QPushButton(text='Animasyonlu kosinüs grafiği başlat')
-        start_anim_graph_foo = QPushButton(text='Animasyonlu gürültü grafiği başlat')
+        start_anim_graph_sincos = QPushButton(text='Animasyonlu gürültü grafiği başlat')
         stop_all_anims = QPushButton(text='Animasyonlu grafiği durdur')
 
         menu_layout.addWidget(fun_label)
         menu_layout.addWidget(start_anim_graph_sin)
         menu_layout.addWidget(start_anim_graph_sincos)
-        menu_layout.addWidget(start_anim_graph_foo)
         menu_layout.addWidget(stop_all_anims)
+        menu_layout.addWidget(self.menu_1_splt)
+        menu_layout.addWidget(self.menu_2_splt)
 
         self.menu_widget.setFixedWidth(0)
 
@@ -178,6 +184,14 @@ class mainUİ(QMainWindow):
         self.volume_slider.setValue(50)
         self.volume_slider.setMaximumSize(40,QWIDGETSIZE_MAX)
 
+        self.speed_indicator_label = QLabel(text='grafik hızı')
+
+        self.speed_indicator_label.setMaximumHeight(60)
+
+        self.speed_indicator = QDial()
+        self.speed_indicator.setValue(50)
+        self.speed_indicator.setRange(0,255)
+
         self.volume_indicator = QLabel('Ses seviyesi: %50')
         self.volume_indicator.setAlignment(Qt.AlignCenter)
 
@@ -219,6 +233,15 @@ class mainUİ(QMainWindow):
         container_layout.setSpacing(0)
 
         container_widget.setLayout(container_layout)
+        
+        self.speed_indicator_label.setAlignment(Qt.AlignCenter)    
+        self.speed_indicator_lbl_f.setText('Grafik güncellenme süresi: ')
+        self.speed_indicator_lbl_f.setStyleSheet('font-size:25px;font-weight:bold')
+
+        self.menu_1_splt.addWidget(self.speed_indicator_label)
+        self.menu_1_splt.addWidget(self.speed_indicator)
+
+        self.menu_2_splt.addWidget(self.speed_indicator_lbl_f)
 
         self.compressor_widgets = [
             QPushButton(text='Dosya:'),
@@ -254,6 +277,14 @@ class mainUİ(QMainWindow):
 
         for graph_settings_1 in self.check_boxes_with_graph_settings:
             self.splt_4_1.addWidget(graph_settings_1)
+        
+        container_2 = [QLabel(),QLabel()]
+
+        container_2[0].setStyleSheet('border:none')
+        container_2[1].setStyleSheet('border:none')
+
+        for _ in container_2:
+            self.splt_4_1.addWidget(_)
         
         for graph_settings_2 in self.graph_apperance_settings:
             self.splt_4_2.addWidget(graph_settings_2) 
@@ -312,6 +343,21 @@ class mainUİ(QMainWindow):
         self.apply_sound_file.clicked.connect(self.procces_sound_file_event)
         self.start.clicked.connect(self.resume_graph)
         self.stop.clicked.connect(self.pause_graph)
+        start_anim_graph_sin.clicked.connect(self.start_animated_sin_graph)
+        start_anim_graph_sincos.clicked.connect(self.start_animated_sincos_graph)
+        stop_all_anims.clicked.connect(self.break_all_anims)
+        self.speed_indicator.valueChanged.connect(self.connect_dial_indicator)
+
+
+        #indexes#
+
+        self.sin_index = 0
+        self.sincos_index = 0 
+        self.volume_index = 0
+
+        #datas#
+
+        self.volume_linspace = np.linspace(0,10,100)
 
         #CSS Side/
         css_file = open(r'program_qss.css','r')
@@ -326,8 +372,72 @@ class mainUİ(QMainWindow):
         plotİtem = self.plot_item.getPlotItem()
 
         exporter = exporters.ImageExporter(plotİtem)
-        exporter.export('ses_grafigi.png')
+        exporter.export('ses_grafigi.png')    
     
+    def start_animated_sin_graph(self):
+        self.sin_timer = QTimer(self)
+        self.sin_timer.stop()
+        self.sin_timer.start(self.speed_indicator.value())
+        self.sin_timer.timeout.connect(self.animated_sin_Graph)
+    
+    def start_animated_sincos_graph(self):
+        self.sincos_timer = QTimer(self)
+        self.sincos_timer.stop()
+        self.sincos_timer.start(self.speed_indicator.value())
+        self.sincos_timer.timeout.connect(self.animated_foo_Graph)
+
+    def connect_dial_indicator(self):
+        self.value = self.speed_indicator.value()
+
+        self.speed_indicator_lbl_f.setText(f'Grafik hızı: {str(self.value)}')
+
+    def animated_sin_Graph(self):
+
+        selected_color = self.graph_apperance_settings[3].currentText().split(',')
+        selected_bg_color = self.graph_apperance_settings[5].currentText().split(',')
+        line_width = self.graph_apperance_settings[1].value()
+
+        main_pen = pg.mkPen(color=selected_color[0].replace('(','').replace(')',''), width=line_width)
+        self.plot_item.setBackground(selected_bg_color[0].replace('(','').replace(')',''))
+        self.curve.setPen(main_pen)
+
+        if self.volume_index >= len(self.volume_linspace):
+            self.volume_index =0
+
+        self.volume_index += 1
+
+        self.curve.setData(np.sin(self.volume_linspace + self.volume_index))
+
+    def animated_foo_Graph(self):
+
+        selected_color = self.graph_apperance_settings[3].currentText().split(',')
+        selected_bg_color = self.graph_apperance_settings[5].currentText().split(',')
+        line_width = self.graph_apperance_settings[1].value()
+
+        main_pen = pg.mkPen(color=selected_color[0].replace('(','').replace(')',''), width=line_width)
+        self.plot_item.setBackground(selected_bg_color[0].replace('(','').replace(')',''))
+        self.curve.setPen(main_pen)
+
+        if self.volume_index >= len(self.volume_linspace):
+            self.volume_index =0
+
+        self.volume_index += 1
+
+        self.curve.setData(np.sin(np.random.normal(0,10,100) + self.volume_index))
+    
+    def break_all_anims(self):
+        try:
+            self.sin_timer.stop()
+            self.sincos_timer.stop()
+            self.sincos_index = 0 
+            self.sin_index = 0
+            self.plot_item.clear()
+
+            self.curve = self.plot_item.plot([],[])
+        except:
+            pass
+
+
     def procces_sound_file_event(self):
 
         #checkbox items#
