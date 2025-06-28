@@ -1,4 +1,4 @@
-time
+ćtime
 
 sys
 
@@ -76,7 +76,7 @@ argparse
 
 random
 
-aqlite3
+sqlite3
 
 Jason
 
@@ -86,6 +86,41 @@ regex
 
 basa64
 
+scipy
+
+pyusb
+
+pywinusb
+
+multiprocessing
+
+pytube
+
+flask
+
+fastapi
+
+jsonify
+
+httpexception
+
+pylab
+
+seaborn
+
+streamlit
+
+socket
+
+turtle
+
+cryptograpghy
+
+aiohttp
+
+networkx
+
+socket
 
 
 
