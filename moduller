@@ -1,4 +1,4 @@
-ćtime
+time
 
 sys
 
@@ -121,6 +121,10 @@ aiohttp
 networkx
 
 socket
+
+sounddevice
+
+soundfile
 
 
 
