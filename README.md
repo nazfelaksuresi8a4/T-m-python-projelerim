@@ -1,8 +1,6 @@
 # Bazi python-projelerim
 burda bazı python projelerim var
 
-ben Ahmet efe 
-
 4+ yıldır pythonda kod yazıyorum proje geliştiriyorum
 
 şu zamana kadar çok ciddi olan projelerimin bir kaçı aşağıda yazılı 
