@@ -68,6 +68,7 @@ ve bunların dahasıda var  sadece bunlara kısıtlı değil
 not: yapay zeka hocasının bana 8. sınıfta 2. dönemde verdiği proje kabul etti🫡🫡
 ---------------------------------------------------------------------------------------------------------------------------------
 
+---------------------------------------------------------------------------------------------------------------------------------
 4- .wav dosyası analiz projesi 
 ---------------------------------------------------------------------------------------------------------------------------------
 bu proje oldukça kapsamlı adındanda belli olacağı üzere bir gui a sahip ayrıca burada modüler bir qss dosyası ile css tanımlandı o yüzden güzel bir arayüz var artık arayüz teknik değil 
@@ -175,6 +176,7 @@ hangisi seçilirse program onu yapıcak
 
 ---------------------------------------------------------------------------------------------------------------------------------
 5- UMBRELLA(Siber güvenlik port tarama aracım)
+---------------------------------------------------------------------------------------------------------------------------------
 
 bu araç ağ programlama mantıkları ile programlanan bir siber güvenlik aracı pyqt5 arayüzlü olmasına rağmen tasarımı kırmızı-siyah olacak şekilde tasarlandı kötü yanı ise bu default 
 
@@ -277,8 +279,9 @@ Ekstra özellikler
 
 --------------------------------------------------------------------------------------------------------------------------------
 
+---------------------------------------------------------------------------------------------------------------------------------
 **6- Deprem takip sistemi:**
-
+---------------------------------------------------------------------------------------------------------------------------------
 Bu proje cok kapsamlı olmasada amacı mantığı ve kullanımı ile kullanıcıları bilgilendirmeyi amaçlayan bir cross-platform programdır..
 
 bu projede ortada bir harita vardır ve bu haritada sağ ve sol panel olacak şekilde Türkiyedeki istediğiniz depremleri sorgulayabiliyorsunuz
@@ -292,12 +295,12 @@ ayrıca son depremler listesine her sorguda son depremler aktarılıyor
 ve haritada çiz ve sorgula seçenekleri Deprem bölgelerini haritada işaretliyor ayrıca işaretli yerlere popup attığı için Ülke İlçe Büyüklük gibi verilerde orada doğru şekilde gösteriliyor 
 
 proje modüler ve geliştirilmeye açık olduğu için update alıcak o yüzden bu anlattıklarım ile kalmayacak o yüzdende lütfen bunu küçük bir proje olark görmeyin şu andada ilk başta dediğim gibi çok bir şeyi olmasada yakında olacak..
------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
------------------------------------------------------------------------------------------------------------------------------------------
-**7- Sistem takip araco**
-
+---------------------------------------------------------------------------------------------------------------------------------
+**8- Sistem takip aracı**
+---------------------------------------------------------------------------------------------------------------------------------
 Bu araç bildiğiniz üzere CLİ(command-line-interface) üzerine kurulu ve sisteminizin/ağınızın kullanım değerlerini size veriyor
 
 iki seçeneği var 
