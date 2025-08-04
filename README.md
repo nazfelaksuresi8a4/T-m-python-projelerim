@@ -277,6 +277,46 @@ Ekstra özellikler
 
 --------------------------------------------------------------------------------------------------------------------------------
 
+**6- Deprem takip sistemi:**
+
+Bu proje cok kapsamlı olmasada amacı mantığı ve kullanımı ile kullanıcıları bilgilendirmeyi amaçlayan bir cross-platform programdır..
+
+bu projede ortada bir harita vardır ve bu haritada sağ ve sol panel olacak şekilde Türkiyedeki istediğiniz depremleri sorgulayabiliyorsunuz
+
+sağ panel- Deprem sorgulama kısmı
+
+sol-panel- Son depremleri sorgulama kısmı
+
+ayrıca son depremler listesine her sorguda son depremler aktarılıyor 
+
+ve haritada çiz ve sorgula seçenekleri Deprem bölgelerini haritada işaretliyor ayrıca işaretli yerlere popup attığı için Ülke İlçe Büyüklük gibi verilerde orada doğru şekilde gösteriliyor 
+
+proje modüler ve geliştirilmeye açık olduğu için update alıcak o yüzden bu anlattıklarım ile kalmayacak o yüzdende lütfen bunu küçük bir proje olark görmeyin şu andada ilk başta dediğim gibi çok bir şeyi olmasada yakında olacak..
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+**7- Sistem takip araco**
+
+Bu araç bildiğiniz üzere CLİ(command-line-interface) üzerine kurulu ve sisteminizin/ağınızın kullanım değerlerini size veriyor
+
+iki seçeneği var 
+
+1. Sistem takibi
+
+2. Ağ takibi
+
+bu iki seçenekteki görüntüleme biçimleride aynı 
+clide bir grafik sistemi mevcut ve değerlere göre 
+hareket ediyor ve yanındada sayılarını veriyor 
+yani iyi bir şekilde kullanıcıya değerleri verebiliyor
+
+kullanması ve kontrol etmesi cok basit ve sade
+CLİ ve görsel güzelliğe önem verenler için güzel bir araç
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
 ##evet aslında daha bir çok projem var ama aralarından seçerek bunları yazdım##
 
 ---------------------------------------------------------------------------------------------------------------------------------
