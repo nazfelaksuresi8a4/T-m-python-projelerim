@@ -1,0 +1,109 @@
+
+QWidget{
+    background-color: rgb(25, 19, 19);
+}
+QSplitter{
+    background-color: rgb(25, 19, 19);
+}
+
+QListWidget{
+    color: rgb(124, 124, 124);
+    font-size: 16px;
+    font-weight: bolder;
+    border: 0.7px solid gold;
+}
+
+QPushButton{
+    background-color: rgb(41, 41, 41);
+    color: white;
+    border: 0.7px solid rgb(177, 21, 21);
+    border-radius: 4px;
+    font-weight: bolder;
+    font-size: 15px;
+}
+QPushButton:hover{
+    background-color: rgb(92, 16, 16);
+    color: rgb(108, 93, 7);
+    font-size: 14px;
+}
+QPushButton:pressed{
+    background-color: red;
+    color: gold;
+    font-size: 20px;
+}
+
+QLineEdit{
+    background-color: rgb(56, 55, 55);
+    color: rgb(178, 178, 178);
+    border: 0.7px solid gold;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 15px;
+}
+QLineEdit:hover{
+    background-color: rgb(255, 0, 0);
+    color: rgb(108, 93, 7);
+    font-size: 18px;
+}
+
+QComboBox{
+    background-color: rgb(41, 31, 31);
+    color: rgb(255, 255, 255);
+    text-decoration-color: white;
+    border: 0.7px solid rgb(88, 88, 88);
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+QLabel{
+    background-color: rgb(41, 41, 41);
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    font-weight: bolder;
+    border-radius: 4px;
+    border: 0.7px solid gold;  
+}
+
+QSpinBox{
+    background-color: rgb(62, 49, 49);
+    color: rgb(224, 223, 223);
+    border: 0.7px solid rgb(85, 85, 85);
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QDateEdit{
+    background-color: rgb(62, 49, 49);
+    color: rgb(224, 223, 223);
+    border: 0.7px solid rgb(85, 85, 85);
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QTimeEdit{
+    background-color: rgb(62, 49, 49);
+    color: rgb(224, 223, 223);
+    border: 0.7px solid rgb(85, 85, 85);
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 14px;
+}
+#recent_earthquakes{
+    background-color: rgb(31, 31, 31);
+    color: rgb(204, 60, 60);
+    font-size: 18px;
+    font-weight: lighter;
+    border-radius: 4px;
+    border: 0.7px solid rgb(122, 108, 26); 
+}
+#sort_label{
+    background-color: rgb(31, 31, 31);
+    color: rgb(204, 60, 60);
+    font-size: 18px;
+    font-weight: lighter;
+    border-radius: 4px;
+    border: 0.7px solid rgb(122, 108, 26); 
+}
