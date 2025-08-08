@@ -6,13 +6,15 @@ from qtpy.QtWidgets import*
 import pyqtgraph as pg
 import sys as _s
 import pygame
+import random
+import datetime
 
 class mainF(QMainWindow):
     def __init__(self):
         super().__init__()
         layout = QHBoxLayout()
         widget = QWidget()
-        self.setStyleSheet('background-color:black;border:2px solid gray')
+        self.setStyleSheet('background-color:black;border:2px solid gray;QSplitter{borders:none}')
         self.showFullScreen()
 
         graph_splt = QSplitter(Qt.Vertical)
@@ -132,6 +134,23 @@ class mainF(QMainWindow):
         self.index_d = 0
         self.index_e = 0
 
+        self.toolbar = QToolBar()
+        self.toolbar.setStyleSheet('background-color:222;color:white')
+
+        self.empty_label = QLabel(text='---/---')
+        self.time_label = QLabel(text='00:00')
+        self.date_label = QLabel(text='0000/00/00')
+
+        self.empty_label.setStyleSheet('color:white;font-size:25px;font-weight:bold;font-family:arias')
+        self.time_label.setStyleSheet('color:white;font-size:25px;font-weight:bold;font-family:arias')
+        self.date_label.setStyleSheet('color:white;font-size:25px;font-weight:bold;font-family:arias')
+        container = []
+        self.toolbar.addWidget(self.empty_label)
+        self.toolbar.addWidget(self.time_label)
+        self.toolbar.addWidget(self.date_label)
+        self.addToolBar(self.toolbar)
+        self.toolbar.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
+
         plotwidget_a = pg.PlotWidget()
         self.line_a = plotwidget_a.plot([],[],pen='g')
 
@@ -149,6 +168,10 @@ class mainF(QMainWindow):
 
         self.amplitude_array_a = []
 
+        dynamic_dt_timer = QTimer(self)
+        dynamic_dt_timer.timeout.connect(self.dt_function)
+        dynamic_dt_timer.start(10)
+
         timer_a_side = QTimer(self)
         timer_a_side.timeout.connect(self.update_bpm_signal)
         timer_a_side.timeout.connect(self.update_spo2_signal)
@@ -165,6 +188,14 @@ class mainF(QMainWindow):
         timer_spo2_bar_side = QTimer(self)
         timer_spo2_bar_side.timeout.connect(self.update_spo2_breath_bars)
         timer_spo2_bar_side.start(40)
+
+        update_value_timer = QTimer(self)
+        update_value_timer.timeout.connect(self.update_value_labels)
+        update_value_timer.start(1000)
+
+        widget_optimize_timer = QTimer(self)
+        widget_optimize_timer.timeout.connect(self.widget_size_optimize_function)
+        widget_optimize_timer.start(10)
         
         timer_c_side.start(35)
         timer_a_side.start(25)
@@ -276,6 +307,7 @@ class mainF(QMainWindow):
             self.amplitude_array_a.append(self.amplitude_a[self.index_a])
             x_axis = list(range(len(self.amplitude_array_a)))
             
+            
             if len(self.amplitude_array_a) == 350:
                 self.amplitude_array_a.pop(0)
                 if len(self.amplitude_array_a) != len(x_axis):
@@ -379,6 +411,50 @@ class mainF(QMainWindow):
             else:
                 self.spo2_bars[self.spo2_index - 1].setStyleSheet('background-color:green')
                 self.spo2_index -= 1
+    
+    def update_value_labels(self):
+        bpm_data = random.randint(90,95)
+        self.bpm_val_lbl.setText(str(bpm_data))
+
+        spo2_data = random.randint(95,101)
+        self.spo2_val_label.setText(str(spo2_data))
+
+        nıbp_data_1 = random.randint(110,120)
+        nıbp_data_2 = random.randint(75,84)
+        self.nıbp_val_lbl.setText(f'{nıbp_data_1}/{nıbp_data_2}')
+
+        resp_data = random.randint(12,25)
+        self.resp_val_lbl.setText(str(resp_data))
+
+        temp_t1data = random.randint(95,97)
+        temp_t1datafl = random.randint(0,7)
+
+        temp_t2data = random.randint(95,97)
+        temp_t2datafl = random.randint(0,7)
+        
+        self.temp_lbl_t1.setText(f't1   {temp_t1data}.{temp_t1datafl}°F')
+        self.temp_lbl_t2.setText(f't2   {temp_t2data}.{temp_t2datafl}°F')
+    
+    def widget_size_optimize_function(self):
+        main_width = self.nıbp_lbl.size().width()
+        main_height = self.nıbp_lbl.size().height()
+
+        self.resp_lbl.setFixedWidth(main_width)
+        self.temp_lbl.setFixedWidth(main_width)
+        self.spo2_label.setFixedWidth(main_width)
+        self.bpm_lbl.setFixedWidth(main_width)
+
+
+        #self.bpm_splt.setMaximumWidth(main_size)
+    
+    def dt_function(self):
+        date = datetime.datetime.now().strftime('%d/%m/%Y')
+        time = datetime.datetime.now().strftime('%H:%M:%S')
+
+        self.time_label.setText(str(time))
+        self.date_label.setText(str(date))
+
+        
 
 if __name__=="__main__":
     sp = QApplication([])
