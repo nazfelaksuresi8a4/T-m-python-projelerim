@@ -1,3 +1,5 @@
+#NOT: Buradaki tüm projeleri solo yani tek başıma geliştirdim
+
 # Bazi python-projelerim
 burda bazı python projelerim var
 
