@@ -1,3 +1,6 @@
+#UYARI Buradaki "en güçlü" "en kapsamlı" "ilk" gibi kelimeler sadece kendi içimde yaptıgım karşılaştırmaları yansıtıyor genel bir kavram olarak söylemedim yanlış anlaşılmasın. 
+
+
 #NOT: Buradaki tüm projeleri solo yani tek başıma geliştirdim
 
 # Bazi python-projelerim
