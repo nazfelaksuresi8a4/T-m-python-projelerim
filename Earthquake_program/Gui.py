@@ -18,38 +18,53 @@ html_array = []
 class Signal(QObject):
     signal = pyqtSignal(str)
 
-    def __init__(self,start_hmsmmy,end_hmsmmy,lim,coordinates,strings,webwidget,new_map):
+    def __init__(self,start_hmsmmy,end_hmsmmy,lim,coordinates,coordinates_heatmap,strings,webwidget,new_map,map_type):
         super().__init__()
         self.start_hmsmmy = start_hmsmmy
         self.end_hmsmmy = end_hmsmmy
         self.lim_data = lim
+        self.coordinates_heatmap = coordinates_heatmap
         self.coordinates = coordinates
         self.strings = strings
         self.webwidget = webwidget
         self.new_map = new_map
+        self.map_type = map_type
 
     def run(self):
         host_data = CustomData(start=self.start_hmsmmy, end=self.end_hmsmmy, lim=str(self.lim_data)).Parse()
 
         for data in host_data:
 
-            MarkerFunction = Create_map.DrawEarthquakeZones(Map=self.new_map,
+            MarkerFunction = Create_map.DrawEarthquakeZones(
+                                            Map=self.new_map,
                                             latitude=data[0],
                                             Longtidue=data[1],
                                             Magnitude=data[2],
                                             Country=data[3],
-                                            City=data[4])
+                                            City=data[4],
+                                            map_type=self.map_type)
             print(data)
                 
+            self.heatmap_latlonmag = [float(data[0]),float(data[1]),float(data[2])]
+
             self.coordinate_matris = [data[0],data[1]]
             self.string_matris = [data[2],data[3],data[4]]
-                
+            
+            self.coordinates_heatmap.append(self.heatmap_latlonmag)
             self.coordinates.append(self.coordinate_matris)
             self.strings.append(self.string_matris)
-                
-            MarkedMap = MarkerFunction.Draw()
 
-            self.signal.emit(MarkedMap.get_root().render())
+            if self.map_type == 'Harita gösterimi türü: Klasik harita':
+                MarkedMap = MarkerFunction.Draw()
+
+                self.signal.emit(MarkedMap.get_root().render())
+            
+            elif self.map_type == 'Harita gösterimi türü: Isı haritası':
+                MarkedMap = MarkerFunction.Draw_heatmap()
+
+                self.signal.emit(MarkedMap.get_root().render())
+
+
 
 
 class LoadGui(QMainWindow):
@@ -57,6 +72,15 @@ class LoadGui(QMainWindow):
         super().__init__()
 
         self.setObjectName('main_window')
+
+        self.toolbar_button_heatmap = QPushButton(text='Isı haritası')
+        self.toolbar_button_marker = QPushButton(text='Klasik harita')
+        self.toolbar_map_type_label = QLabel(text='Harita gösterimi türü: ')
+
+        self.main_toolbar = QToolBar()
+        self.main_toolbar.addWidget(self.toolbar_button_heatmap)
+        self.main_toolbar.addWidget(self.toolbar_button_marker)
+        self.main_toolbar.addWidget(self.toolbar_map_type_label)
 
         #datas#
         citys = file_actions.CityList().List()
@@ -66,6 +90,7 @@ class LoadGui(QMainWindow):
         self.Map = None
         self.strings = []
         self.coordinates = []
+        self.heatmap_coordinates = []
 
         self.coordinates_recent = []
         self.strings_recent = []
@@ -262,6 +287,8 @@ class LoadGui(QMainWindow):
         self.main_widget.setLayout(self.main_layout)
         self.scroll_area_widget.setLayout(self.scroll_area_layout)
 
+        self.main_toolbar.setParent(self.map_side)
+
         self.setCentralWidget(self.main_widget)
         
         #adding-widgets-1#
@@ -294,6 +321,8 @@ class LoadGui(QMainWindow):
         self.map_side.addWidget(self.go_back_map)
         self.map_side.addWidget(self.map_zoom_label)
         self.map_side.addWidget(self.map_zoom_slider)
+
+        self.thread_is_running = False
 
         self.earthquake_data_splitter.addWidget(self.city_label)
         self.earthquake_data_splitter.addWidget(self.start_hms_label)
@@ -335,11 +364,14 @@ class LoadGui(QMainWindow):
 
         #signal-slots#
         self.optimize_dates()
+        self.change_default_map_option()
 
         self.map_zoom_slider.valueChanged.connect(self.StartZoom)
         self.apply_earthquake_datas.clicked.connect(self.connect_api)
         self.sort_earthquakes.clicked.connect(self.worker_function_sorting_recent_earthquakes)
         self.show_recent_earthquakes_with_map.clicked.connect(self.worker_show_recent_earthquakes_with_map)
+        self.toolbar_button_heatmap.clicked.connect(self.change_heatmap)
+        self.toolbar_button_marker.clicked.connect(self.change_classic_map)
 
 
         self.location_timer = QTimer(self)
@@ -347,22 +379,26 @@ class LoadGui(QMainWindow):
         self.location_timer.start(1) 
     
     def worker_function_sorting_recent_earthquakes(self):
-        thread = threading.Thread(target=self.sort_recent_earthquakes_function,daemon=True)
+        thread = threading.Thread(target=self.sort_recent_earthquakes_function,daemon=False)
         thread.start()
     
     def worker_show_recent_earthquakes_with_map(self):
-        thread = threading.Thread(target=self.draw_earthquakes_function,daemon=True)
+        thread = threading.Thread(target=self.draw_earthquakes_function,daemon=False)
         thread.start()
-    
-
-
         
     def StartZoom(self):    
         self.zoom_level = self.map_zoom_slider.value()
+        _Function = Create_map.ZoomMap(value=self.zoom_level,location=self.location,marker_locations=self.coordinates,heatmap_locations=self.heatmap_coordinates,popups=self.strings,map_type=str(self.toolbar_map_type_label.text()))
         
-        __Function = Create_map.ZoomMap.zoomMap(value=self.zoom_level,location=self.location,marker_locations=self.coordinates,popups=self.strings)
+        if self.toolbar_map_type_label.text() == 'Harita gösterimi türü: Klasik harita':
+            fFunction = _Function.zoomMap()
+            print(fFunction)
+        
+        elif self.toolbar_map_type_label.text() == 'Harita gösterimi türü: Isı haritası':
+            fFunction = _Function.zoomHeatmap()
+            print(fFunction)
 
-        self.webwidget.setHtml(__Function)
+        self.webwidget.setHtml(fFunction)
     
     def update_map_location(self):
         static_location = self.Turkiye_map.location
@@ -394,7 +430,14 @@ class LoadGui(QMainWindow):
             self.lim_data = self.limit_input.value()
 
             self.thread_ = QThread()
-            self.signal = Signal(self.start_date_tokenized,self.end_date_tokenized,self.lim_data,self.coordinates,self.strings,self.webwidget,self.new_map)
+            self.signal = Signal(start_hmsmmy=self.start_date_tokenized,end_hmsmmy=self.end_date_tokenized,lim=self.lim_data,coordinates=self.coordinates,coordinates_heatmap=self.heatmap_coordinates,strings=self.strings,webwidget=self.webwidget,new_map=self.new_map,map_type=str(self.toolbar_map_type_label.text()))
+
+            if self.thread_is_running == True:
+                self.thread_.quit()
+                self.thread_.wait()
+                self.thread_is_running = False
+            
+            self.signal = Signal(start_hmsmmy=self.start_date_tokenized,end_hmsmmy=self.end_date_tokenized,lim=self.lim_data,coordinates=self.coordinates,coordinates_heatmap=self.heatmap_coordinates,strings=self.strings,webwidget=self.webwidget,new_map=self.new_map,map_type=str(self.toolbar_map_type_label.text()))
             self.signal.moveToThread(self.thread_)
 
             self.signal.signal.connect(self.update_html)
@@ -402,15 +445,22 @@ class LoadGui(QMainWindow):
 
             self.thread_.start()
 
+            self.thread_.quit()
+            self.thread_is_running = True
+
+
         except Exception as exception_1:
             print(f'exception: {exception_1}')
             QMessageBox.critical(self,'Uyarı',f'{self.start_date} // {self.end_date} tarihleri arasında Deprem görülmemektedir!')
     
+    def falser(self):
+        self.thread_is_running = False
+
     def update_html(self,html):
         self.webwidget.setHtml(html)
 
     def worker_api(self):
-        signal = Signal()
+        signal = Signal(start_hmsmmy=self.start_date_tokenized,end_hmsmmy=self.end_date_tokenized,lim=self.lim_data,coordinates=self.coordinates,coordinates_heatmap=self.heatmap_coordinates,strings=self.strings,webwidget=self.webwidget,new_map=self.new_map,map_type=str(self.toolbar_map_type_label.text()))
         signal.signal.emit('test')
 
     def optimize_dates(self):
@@ -516,6 +566,124 @@ class LoadGui(QMainWindow):
         except Exception as exception_2:
             QMessageBox.critical(self,'Uyarı',f'{self.start_date_recent} // {self.end_date_recent} tarihleri arasında Deprem görülmemektedir! {exception_2}')
 
+    def change_heatmap(self):
+        self.toolbar_map_type_label.setText(f'Harita gösterimi türü: {str(self.toolbar_button_heatmap.text())}') 
+        self.toolbar_button_heatmap.setStyleSheet('''background-color: orange;
+    color: white;
+    border: 0.7px solid rgb(177, 21, 21);
+    border-radius: 4px;
+    font-weight: bolder;
+    font-size: 15px;
+}
+QPushButton:hover{
+    background-color: rgb(92, 16, 16);
+    color: rgb(108, 93, 7);
+    font-size: 14px;
+}
+QPushButton:pressed{
+    background-color: red;
+    color: gold;
+    font-size: 20px;
+}''')
+        
+        self.toolbar_button_marker.setStyleSheet('''background-color: orange;
+    color: white;
+    border: 0.7px solid rgb(177, 21, 21);
+    border-radius: 4px;
+    font-weight: bolder;
+    font-size: 15px;
+}
+QPushButton:hover{
+    background-color: rgb(92, 16, 16);
+    color: rgb(108, 93, 7);
+    font-size: 14px;
+}
+QPushButton:pressed{
+    background-color: red;
+    color: gold;
+    font-size: 20px;
+}''')
+        
+    def change_classic_map(self):
+        
+        self.toolbar_map_type_label.setText(f'Harita gösterimi türü: {str(self.toolbar_button_marker.text())}')
+        self.toolbar_button_heatmap.setStyleSheet('''background-color: white;
+    color: black;
+    border: 0.7px solid rgb(177, 21, 21);
+    border-radius: 4px;
+    font-weight: bolder;
+    font-size: 24px;
+}
+QPushButton:hover{
+    background-color: rgb(92, 16, 16);
+    color: rgb(108, 93, 7);
+    font-size: 25;
+}
+QPushButton:pressed{
+    background-color: red;
+    color: gold;
+    font-size: 30px;
+}''')
+        
+        self.toolbar_button_marker.setStyleSheet('''background-color: orange;
+    color: white;
+    border: 0.7px solid rgb(177, 21, 21);
+    border-radius: 4px;
+    font-weight: bolder;
+    font-size: 24px;
+}
+QPushButton:hover{
+    background-color: rgb(92, 16, 16);
+    color: rgb(108, 93, 7);
+    font-size: 25;
+}
+QPushButton:pressed{
+    background-color: red;
+    color: gold;
+    font-size: 30px;
+}''')
+
+    def change_default_map_option(self):
+        self.toolbar_button_heatmap.setStyleSheet('''QPushButton{
+    background-color: white;
+    color: black;
+    border: 0.7px solid rgb(177, 21, 21);
+    border-radius: 4px;
+    font-weight: bolder;
+    font-size: 24px;
+}
+QPushButton:hover{
+    background-color: rgb(92, 16, 16);
+    color: rgb(108, 93, 7);
+    font-size: 25;
+}
+QPushButton:pressed{
+    background-color: red;
+    color: gold;
+    font-size: 30px;
+}''')
+        
+        self.toolbar_button_marker.setStyleSheet('''QPushButton{
+    background-color: orange;
+    color: white;
+    border: 0.7px solid rgb(177, 21, 21);
+    border-radius: 4px;
+    font-weight: bolder;
+    font-size: 24px;
+}
+QPushButton:hover{
+    background-color: rgb(92, 16, 16);
+    color: rgb(108, 93, 7);
+    font-size: 25;
+}
+QPushButton:pressed{
+    background-color: red;
+    color: gold;
+    font-size: 30px;
+}''')
+        
+        self.toolbar_map_type_label.setText(f'Harita gösterimi türü: {str(self.toolbar_button_heatmap.text())}') 
+    
 sp = QApplication(sys.argv) 
 
 sw = LoadGui()
