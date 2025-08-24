@@ -55,11 +55,7 @@ class CustomData():
             none_type_array  = []
 
             for data in self.data:
-               if data == None:
-                   none_type_array.append(data)
-               else:
-                 
-                 yield [data['latitude'],data['longitude'],data['magnitude'],data['country'],data['province']]
+                yield [data['latitude'],data['longitude'],data['magnitude'],data['country'],data['province']]
 
 class Returner():
     def __init__(self):
