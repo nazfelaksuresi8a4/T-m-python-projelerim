@@ -177,6 +177,8 @@ FFT: FAST-FOUİRER-TRANSFORM SWAP'i ----->> analiz kısmında ses grafiği ile f
 hangisi seçilirse program onu yapıcak 
 
 ###Muhtemelen siz bunları okurken bunlar eklenmiş olucak##
+
+NOT: (GUNCELLEME)FFT Özelliği programa eklendi hatalar fixlendi
 ---------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -194,6 +196,26 @@ sağ panel- Deprem sorgulama kısmı
 sol-panel- Son depremleri sorgulama kısmı
 
 ayrıca son depremler listesine her sorguda son depremler aktarılıyor 
+
+son depremler kısmı web kaynaklsrındsn son 100 depremi çekip tüm detaylarını listeye aktarıyor
+
+istersek listeden seçip depremiharitada görselleştirebiliyoruz 
+
+ayrıca programda hem api hemde web kazıma denilen method ile veri çekme özelliği mevcut 
+
+çoklu çekirdek (thread) özelliği ile büyük işlemler aynı andayyapılabiliyor(paralel işlem) h
+
+GÖRSELLEŞTİRME TÜRLERİ:
+
+Marker-Popup
+
+Heatmap
+
+
+VERİ GÖSTERME TÜRLERİE
+
+SATIR-SÜTUN(Tabler widgeti) 
+
 
 ve haritada çiz ve sorgula seçenekleri Deprem bölgelerini haritada işaretliyor ayrıca işaretli yerlere popup attığı için Ülke İlçe Büyüklük gibi verilerde orada doğru şekilde gösteriliyor 
 
