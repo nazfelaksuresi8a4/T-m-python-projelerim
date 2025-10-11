@@ -1,0 +1,36 @@
+import sounddevice as sd
+import soundfile as sf
+import numpy as np
+
+file = r"C:\Users\Elçin YILDIZ\Downloads\T12 12.1 Inch Patient Monitor (mp3cut.net).wav"
+data, sample_rate = sf.read(file)
+nchannels = data.shape[1] if len(data.shape) > 1 else 1
+n = len(data)
+
+def callback(outdata, frames, time, status):
+    if status:
+        print(status)
+    start = callback.i
+    end = start + frames
+    if end > n:
+        end = n
+        outdata[:end - start] = data[start:end]
+        outdata[end - start:] = 0  # geri kalan sessiz
+        raise sd.CallbackStop()  # ses bitince stream durur
+    else:
+        outdata[:] = data[start:end]
+    callback.i += frames
+
+callback.i = 0
+
+stream = sd.OutputStream(
+    samplerate=sample_rate,
+    blocksize=1024,
+    channels=nchannels,
+    callback=callback,
+)
+
+stream.start()
+sd.sleep(int(n / sample_rate * 1000) + 1000)  # Dosya süresi kadar bekle + 1 saniye
+stream.stop()
+stream.close()
