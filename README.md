@@ -245,6 +245,80 @@ CLİ ve görsel güzelliğe önem verenler için güzel bir araç
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
+_______________________________________________________________________________________________________________________________________
+**9-MRI Analiz Programı**
+HMS[19:14:30]
+YMD[2025.08.30]
+
+Mrı-BT-CT-PET görüntülerini analiz edebilen yapay zeka destekli bir program 
+-------------------------------------------------------------------
+
+#TEMEL ÖZELLİKLER#
+
+1- Kontrastlı bölge gösterme
+
+2- Görüntü İyileştirme
+
+3- Hatları Netleştirme
+
+4- Tümör tespiti
+
+5- Organlardaki hastalıklı dokuları tespit etme
+
+6- .nii.gz .nii dosyalarını işleyebilme 
+
+7- .png  .jpg   .img  dosyalarını işleyebilme
+
+8- Mrı görüntülerini dilim dilim(slice) olarak gösterebilmek(baştan sona sondan başa özelliği ile) 
+
+9- Çoklu mrı gösterimi
+
+10- Farklı tıbbi verileri işleme(CT-BT-MRI-PET) 
+
+11- MRI BT CT yorumlama [Yapay zeka]
+
+12- Farklı görüntü işleme tekniklerini görüntülere uygulayabilme 
+
+#ARAYÜZ FRAMEWORKLERİ#
+
+PyQt5/QtPy -> Ana arayüz
+
+Kivy/Tkİnter -> Ekstra bileşenler için 
+
+#BACKEND MODÜLLERİ#
+
+Numpy -> veri analizi için
+Opencv-pyton[cv2] -> Görüntü işleme için
+Pandas -> medikal tablolar üzerinde işlem gerçekleştirebilmek için
+Skimage -> detaylı medikal görüntü işlemek için
+Matplotlib -> Grafik gösterimi / Resim gösterimi -- renderer görevi için
+Pyqtgraph -> Gerçek zamanlı grafikler için
+Requests -> APİ bağımlılıkları için
+Tensorflow -> sinir ağları için
+Keras -> Hazır modeller için 
+
+
+#DETAY#
+
+Bu proje geliştirmeye açık ve modüler şekilde tasarlanacak. Bu yüzdende Güncellemelere açık bir proje olacak.
+
+NOT: !!BU PROJE SOLO OLARAK GELİŞTİRİLMEKTEDİR!!
+
+BİLGİLENDİRME: Proje geliştikçe bu repoya gelişmeler aktarılacaktır 
+
+-TR-TR-
+
+
+
+__________________________________________________________________________________________________________________
+**Otobüs Takip Sistemi (OTS)**
+#web scrapping kaynağı: https://www.eshot.gov.tr/
+#opsiyonel(harita apisi): https://www.eshot.gov.tr/
+#otobüğs-dıurak api kaynağı: 
+
+#proje amacı: bu proje belirtilen duraktan geçen otobüslerin hangi sıra ile geçtiğini listeyen bir program olacak
+__________________________________________________________________________________________________________________
+
 ##evet aslında daha bir çok projem var ama aralarından seçerek bunları yazdım##
 
 ---------------------------------------------------------------------------------------------------------------------------------
