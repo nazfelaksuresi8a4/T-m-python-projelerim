@@ -672,28 +672,9 @@ Yer: {self.all_datas[6]}\n
     def sort_recent_earthquakes_function(self):
         try:
             #https://deprem.afad.gov.tr/last-earthquakes.html
-            value = self.day_selector.value()
-            current_date = timezone.current_date(value).returner()
-            
-            self.earthquake_date.setDate(current_date)
 
-            self.recent_earthquakes_list.clear() 
-
-            self.start_date_recent = self.recent_date.date().toPyDate()
-            self.end_date_recent = self.earthquake_date.date().toPyDate()
-
-            self.start_time_recent = self.start_time_setting.time().toPyTime() 
-            self.end_time_recent = self.end_time_setting.time().toPyTime()
-
-            self.start_date_tokenized_f = f'{self.end_date_recent}T{self.end_time_recent}'
-            self.end_date_tokenized_f = f'{self.start_date_recent}T{self.start_time_recent}'
-
-            #lim_data = self.limit_input.value()
-            print(self.start_date_tokenized_f)
-            print(self.end_date_tokenized_f)
-
-            host_recentf = scrapping.ScrappingClass().returnerf()
-
+            host_recentf = scrapping.ScrappingClass().returnerf('görünmez')
+            print(host_recentf)
             index = 0
             for dataf in host_recentf:
                 
@@ -716,7 +697,8 @@ Yer: {self.all_datas[6]}\n
                 index += 1
 
         except Exception as exception_2:
-            QMessageBox.critical(self,'Uyarı',f'{self.start_date_recent} // {self.end_date_recent} tarihleri arasında Deprem görülmemektedir! {exception_2}')
+            #QMessageBox.critical(self,'Uyarı',f'{self.start_date_recent} // {self.end_date_recent} tarihleri arasında Deprem görülmemektedir! {exception_2}')
+            print(exception_2,'sort_recent_earthquakes_function')
 
     def change_heatmap(self):
         self.toolbar_map_type_label.setText(f'Harita gösterimi türü: {str(self.toolbar_button_heatmap.text())}') 
@@ -828,7 +810,7 @@ QPushButton:hover{
     color: rgb(108, 93, 7);
     font-size: 25;
 }
-QPushButton:pressed{
+QPushButton:pressed{v
     background-color: red;
     color: gold;
     font-size: 30px;
