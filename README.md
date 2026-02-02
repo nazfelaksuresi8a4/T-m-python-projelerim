@@ -6,7 +6,7 @@
 # Bazi python-projelerim
 burda bazı python projelerim var
 
-4+ yıldır pythonda kod yazıyorum proje geliştiriyorum
+5+ yıldır pythonda kod yazıyorum proje geliştiriyorum
 
 şu zamana kadar çok ciddi olan projelerimin bir kaçı aşağıda yazılı 
 
