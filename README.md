@@ -319,6 +319,10 @@ ________________________________________________________________________________
 #proje amacı: bu proje belirtilen duraktan geçen otobüslerin hangi sıra ile geçtiğini listeyen bir program olacak
 __________________________________________________________________________________________________________________
 
+10- **Plant Disease Programı**
+Bu program bir derin öğrenme + analiz programı olmak ile beraber ayrı bir repositorysi bulunmaktadır oraya ulaşmak için lütfen linke tıklayın
+
+https://github.com/nazfelaksuresi8a4/Plant-disease-Project-Bitki-Hastal-Projesi-
 ##evet aslında daha bir çok projem var ama aralarından seçerek bunları yazdım##
 
 ---------------------------------------------------------------------------------------------------------------------------------
